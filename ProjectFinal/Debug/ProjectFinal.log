@@ -1,0 +1,20 @@
+﻿  ProjectFinal.cpp
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\window.h(12): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\window.h(13): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(574): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(576): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(624): warning C4805: '==': combinación no segura del tipo 'GLint' y el tipo 'bool' en la operación
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(625): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(852): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(853): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(868): warning C4805: '==': combinación no segura del tipo 'GLint' y el tipo 'bool' en la operación
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(869): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(913): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1026): warning C4305: '=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1092): warning C4805: '==': combinación no segura del tipo 'GLint' y el tipo 'bool' en la operación
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1093): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1162): warning C4805: '==': combinación no segura del tipo 'GLint' y el tipo 'bool' en la operación
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1163): warning C4305: '+=': truncamiento de 'double' a 'float'
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1456): warning C4805: '==': combinación no segura del tipo 'GLint' y el tipo 'bool' en la operación
+c:\users\cesar\desktop\proyecto_final_cgeihc\projectfinal\projectfinal\projectfinal.cpp(1460): warning C4305: '+=': truncamiento de 'double' a 'float'
+  ProjectFinal.vcxproj -> C:\Users\cesar\Desktop\Proyecto_Final_CGEIHC\ProjectFinal\Debug\ProjectFinal.exe
