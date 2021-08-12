@@ -1,6 +1,6 @@
 /*
 Semestre 2021-2
-Pr醕tica : Iluminaci髇
+Pr谩ctica : Iluminaci贸n
 Cambios en el shader, en lugar de enviar la textura en el shader de fragmentos, enviaremos el finalcolor
 */
 //para cargar imagen
@@ -31,7 +31,7 @@ Cambios en el shader, en lugar de enviar la textura en el shader de fragmentos, 
 #include "Skybox.h"
 
 
-//para iluminaci髇
+//para iluminaci贸n
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -69,6 +69,7 @@ Model RutaDrone_M;
 Model RutaCarro_M;
 Model PruebaCarro_M;
 Model Carro_M;
+Model Carro2_M;
 Model Animacion_M;
 Model Cuerpo_M;
 Model Brazo_M;
@@ -116,7 +117,7 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 
 
-//c醠culo del promedio de las normales para sombreado de Phong
+//c谩lculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -378,7 +379,11 @@ int main()
 	PruebaCarro_M = Model();
 	PruebaCarro_M.LoadModel("Models/CarPrueba.obj");
 	Carro_M = Model();
-	Carro_M.LoadModel("Models/Car1.obj");
+	Carro_M.LoadModel("Models/CarNot.obj");
+	Carro2_M = Model();
+	Carro2_M.LoadModel("Models/Car1.obj");
+	Llanta_M = Model();
+	Llanta_M.LoadModel("Models/rueda.obj");
 	Animacion_M = Model();
 	Animacion_M.LoadModel("Models/AnimacionLuces.obj");
 	Cuerpo_M = Model();
@@ -464,16 +469,16 @@ int main()
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
 
-	//posici髇 inicial del helic髉tero
+	//posici贸n inicial del helic贸ptero
 	glm::vec3 posblackhawk = glm::vec3(-20.0f, 6.0f, -1.0);
 
-	//luz direccional, s髄o 1 y siempre debe de existir
+	//luz direccional, s贸lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaraci髇 de primer luz puntual
+	//Declaraci贸n de primer luz puntual
 	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
 		0.0f, 1.0f,
 		2.0f, 1.5f, 1.5f,
@@ -602,7 +607,7 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 
-		//informaci髇 en el shader de intensidad especular y brillo
+		//informaci贸n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -610,12 +615,12 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		//luz ligada a la c醡ara de tipo flash 
+		//luz ligada a la c谩mara de tipo flash 
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//informaci髇 al shader de fuentes de iluminaci髇
+		//informaci贸n al shader de fuentes de iluminaci贸n
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
@@ -863,7 +868,7 @@ int main()
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 
-		//Animaci髇 Drone
+		//Animaci贸n Drone
 		posYDrone = sin(offsetDrone*toRadians);
 		if (mainWindow.getactivateDrone() == true) {
 			DroneT += 0.1;
@@ -1088,7 +1093,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		RutaCarro_M.RenderModel();*/
 
-		//Animaci髇 Carro
+		//Animaci贸n Carro
 		if (mainWindow.getactivateCar() == true) {
 			CarT += 0.1;
 		}
@@ -1098,6 +1103,19 @@ int main()
 			posZCar = 0.0f;
 			posXCar = 0.0f;
 			posYCar = 0.0f;
+			posZRode = 0.0f;
+			posXRode = 0.0f;
+			posYRode = 0.0f;
+			giroRode = 0.0f;
+			posZRode2 = 0.0f;
+			posXRode2 = 0.0f;
+			giroRode2 = 0.0f;
+			posZRode3 = 0.0f;
+			posXRode3 = 0.0f;
+			giroRode3 = 0.0f;
+			posZRode4 = 0.0f;
+			posXRode4 = 0.0f;
+			giroRode4 = 0.0f;
 		}
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(5*10.0f, 6*10.0f,35*10.0f));
@@ -1107,39 +1125,37 @@ int main()
 			posZCar += 0.1f;
 			model = glm::translate(model, glm::vec3(0.0f, 0.0, posZCar));
 		}
-		if (CarT > 2 * 10.0f && CarT < 3.75 * 10.0f) {
+		/*if (CarT > 2 * 10.0f && CarT < 3.75 * 10.0f) {
 			posZCar += 0.1f;
 			giroCar += 0.5f;
 			posXCar += 0.1f;
 			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
 			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		}
+		}*/
 		if (CarT > 3.75 * 10.0f && CarT <  5* 10.0f) {
 			posXCar += 0.1f;
 			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
 			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
-		if (CarT > 5 * 10.0f && CarT < 6.75 * 10.0f) {
+		/*if (CarT > 5 * 10.0f && CarT < 6.75 * 10.0f) {
 			posZCar += 0.1f;
 			giroCar += -0.5f;
 			posXCar += 0.1f;
 			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
 			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		}
+		}*/
 		if (CarT > 6.75 * 10.0f && CarT <  10.75* 10.0f) {
 			posZCar += 0.1f;
-			//giroCar += -0.5f;
-			//posXCar += 0.1f;
 			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
 			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
-		if (CarT > 10.75* 10.0f && CarT < 12.5* 10.0f) {
+		/*if (CarT > 10.75* 10.0f && CarT < 12.5* 10.0f) {
 			//posZCar += 0.1f;
 			giroCar += -0.5f;
 			//posXCar += -0.1f;
 			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
 			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		}
+		}*/
 		if (CarT > 12.5 * 10.0f && CarT < 15* 10.0f) {
 			posXCar += -0.1f;
 			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
@@ -1151,14 +1167,205 @@ int main()
 		}
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Carro_M.RenderModel();
+		 
+		//Carro 2
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(5 * 10.0f, 6 * 10.0f, 35 * 10.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		if (CarT > 2 * 10.0f && CarT < 3.75 * 10.0f) {
+			posZCar += 0.1f;
+			giroCar += 0.5f;
+			posXCar += 0.1f;
+			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
+			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (CarT > 5 * 10.0f && CarT < 6.75 * 10.0f) {
+			posZCar += 0.1f;
+			giroCar += -0.5f;
+			posXCar += 0.1f;
+			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
+			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		if (CarT > 10.75* 10.0f && CarT < 12.5* 10.0f) {
+			//posZCar += 0.1f;
+			giroCar += -0.5f;
+			//posXCar += -0.1f;
+			model = glm::translate(model, glm::vec3(posXCar, 0.0, posZCar));
+			model = glm::rotate(model, giroCar* toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Carro2_M.RenderModel();
 
+		//Animacion Ruedas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(5.9 * 10.0f, 6.4 * 10.0f, 33.5 * 10.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		if (CarT > 0.1f && CarT < 2 * 10.0f) {
+			posZRode += -0.1f;
+			giroRode += -5*1.0;
+			model = glm::translate(model, glm::vec3(0.0f, 0.0, posZRode));
+			model = glm::rotate(model, giroRode* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			
+		}
+		if (CarT > 3.75 * 10.0f && CarT < 5 * 10.0f) {
+			posZRode = (10 * 0.12) -(posZCar);
+			posXRode = (-10 * 0.6) -(posXCar);
+			giroRode += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode, 0.0, posZRode));
+			model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 6.75 * 10.0f && CarT < 10.75* 10.0f) {
+			posZRode = -(posZCar);
+			posXRode = -(posXCar);
+			giroRode += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode, 0.0, posZRode));
+			model = glm::rotate(model, giroRode* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 12.5 * 10.0f && CarT < 15 * 10.0f) {
+			posZRode = (10 * 0.58) - (posZCar);
+			posXRode = (10 * 0.18) - (posXCar);
+			giroRode += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode, 0.0, posZRode));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 15 * 10.0f) {
+			model = glm::translate(model, glm::vec3(posXRode, 0.0, posZRode));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Llanta_M.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(4.1* 10.0f, 6.4 * 10.0f, 33.5 * 10.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		if (CarT > 0.1f && CarT < 2 * 10.0f) {
+			posZRode2 += 0.1f;
+			giroRode2 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(0.0f, 0.0, posZRode2));
+			model = glm::rotate(model, giroRode2* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		}
+		if (CarT > 3.75 * 10.0f && CarT < 5 * 10.0f) {
+			posZRode2 = (-10 * 0.6)+(posZCar);
+			posXRode2 = (10 * 0.18)+(posXCar);
+			giroRode2 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode2, 0.0, posZRode2));
+			model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode2* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 6.75 * 10.0f && CarT < 10.75* 10.0f) {
+			posZRode2 = (posZCar);
+			posXRode2 = (posXCar);
+			giroRode2 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode2, 0.0, posZRode2));
+			model = glm::rotate(model, giroRode2* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 12.5 * 10.0f && CarT < 15 * 10.0f) {
+			posZRode2 = (-10 * 0.12)+(posZCar);
+			posXRode2 = (-10 * 0.6)+(posXCar);
+			giroRode2 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode2, 0.0, posZRode2));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode2* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 15 * 10.0f) {
+			model = glm::translate(model, glm::vec3(posXRode2, 0.0, posZRode2));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Llanta_M.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(5.9 * 10.0f, 6.4 * 10.0f, 36.4 * 10.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		if (CarT > 0.1f && CarT < 2 * 10.0f) {
+			posZRode3 += -0.1f;
+			giroRode3 += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(0.0f, 0.0, posZRode3));
+			model = glm::rotate(model, giroRode3* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		}
+		if (CarT > 3.75 * 10.0f && CarT < 5 * 10.0f) {
+			posZRode3 = (-10 * 0.55) - (posZCar);
+			posXRode3 = (10 * 0.15) - (posXCar);
+			giroRode3 += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode3, 0.0, posZRode3));
+			model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode3* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 6.75 * 10.0f && CarT < 10.75* 10.0f) {
+			posZRode3 = -(posZCar);
+			posXRode3 = -(posXCar);
+			giroRode3 += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode3, 0.0, posZRode3));
+			model = glm::rotate(model, giroRode3* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 12.5 * 10.0f && CarT < 15 * 10.0f) {
+			posZRode3 = (-10 * 0.12) -(posZCar);
+			posXRode3 = (-10 * 0.56) -(posXCar);
+			giroRode3 += -5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode3, 0.0, posZRode3));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode3* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 15 * 10.0f) {
+			model = glm::translate(model, glm::vec3(posXRode3, 0.0, posZRode3));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Llanta_M.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(4.1 * 10.0f, 6.4 * 10.0f, 36.4 * 10.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		if (CarT > 0.1f && CarT < 2 * 10.0f) {
+			posZRode4 += 0.1f;
+			giroRode4 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(0.0f, 0.0, posZRode4));
+			model = glm::rotate(model, giroRode2* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		}
+		if (CarT > 3.75 * 10.0f && CarT < 5 * 10.0f) {
+			posZRode4 = (10 * 0.11)+(posZCar);
+			posXRode4 = (-10 * 0.55)+(posXCar);
+			giroRode4 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode4, 0.0, posZRode4));
+			model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode4* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 6.75 * 10.0f && CarT < 10.75* 10.0f) {
+			posZRode4 = (posZCar);
+			posXRode4 = (posXCar);
+			giroRode4 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode4, 0.0, posZRode4));
+			model = glm::rotate(model, giroRode4* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 12.5 * 10.0f && CarT < 15 * 10.0f) {
+			posZRode4 = (10 * 0.58)+(posZCar);
+			posXRode4 = (10 * 0.13)+(posXCar);
+			giroRode4 += 5 * 1.0;
+			model = glm::translate(model, glm::vec3(posXRode4, 0.0, posZRode4));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, giroRode4* toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (CarT > 15 * 10.0f) {
+			model = glm::translate(model, glm::vec3(posXRode4, 0.0, posZRode4));
+			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Llanta_M.RenderModel();
 		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Animacion_M.RenderModel();*/
 
-		//Animaci髇 Subiendo escaleras
+		//Animaci贸n Subiendo escaleras
 		if (mainWindow.getactivateEscaleras() == true) {
 			EscalerasT += 0.1;
 		}
