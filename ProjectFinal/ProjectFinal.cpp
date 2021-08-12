@@ -89,6 +89,8 @@ Model Escaleras_M;
 //Model Arboles_M;
 Model Otros_M;
 
+//Variables keyframes
+float reproduciranimacion, habilitaranimacion, guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
 
 Skybox skybox;
@@ -310,7 +312,186 @@ void CreateShaders()
 //
 //}
 
+///////////////////////////////KEYFRAMES/////////////////////
 
+
+bool animacion = false;
+
+
+
+//NEW// Keyframes
+float posXavion = 2.0, posYavion = 25*10.0, posZavion = 0;
+float	movAvion_x = 0.0f, movAvion_y = 0.0f;
+float giroAvion = 0;
+
+#define MAX_FRAMES 100
+int i_max_steps = 90;
+int i_curr_steps = 6;
+typedef struct _frame
+{
+	//Variables para GUARDAR Key Frames
+	float movAvion_x;		//Variable para PosicionX
+	float movAvion_y;		//Variable para PosicionY
+	float movAvion_xInc;		//Variable para IncrementoX
+	float movAvion_yInc;		//Variable para IncrementoY
+	float giroAvion;
+	float giroAvionInc;
+}FRAME;
+
+FRAME KeyFrame[MAX_FRAMES];
+int FrameIndex = 6;			//introducir datos
+bool play = false;
+int playIndex = 0;
+
+void saveFrame(void) { //tecla L
+
+	printf("frameindex %d\n", FrameIndex);
+
+
+	KeyFrame[FrameIndex].movAvion_x = movAvion_x;
+	KeyFrame[FrameIndex].movAvion_y = movAvion_y;
+	KeyFrame[FrameIndex].giroAvion;
+	//no volatil, agregar una forma de escribir a un archivo para guardar los frames
+	FrameIndex++;
+}
+
+void resetElements(void) //Tecla 0
+{
+
+	movAvion_x = KeyFrame[0].movAvion_x;
+	movAvion_y = KeyFrame[0].movAvion_y;
+	giroAvion = KeyFrame[0].giroAvion;
+}
+
+void interpolation(void)
+{
+	KeyFrame[playIndex].movAvion_xInc = (KeyFrame[playIndex + 1].movAvion_x - KeyFrame[playIndex].movAvion_x) / i_max_steps;
+	KeyFrame[playIndex].movAvion_yInc = (KeyFrame[playIndex + 1].movAvion_y - KeyFrame[playIndex].movAvion_y) / i_max_steps;
+	KeyFrame[playIndex].giroAvionInc = (KeyFrame[playIndex + 1].giroAvion - KeyFrame[playIndex].giroAvion) / i_max_steps;
+
+}
+
+
+void animate(void)
+{
+	//Movimiento del objeto // barra espaciadora
+	if (play)
+	{
+		if (i_curr_steps >= i_max_steps) //end of animation between frames?
+		{
+			playIndex++;
+			printf("playindex : %d\n", playIndex);
+			if (playIndex > FrameIndex - 2)	//end of total animation?
+			{
+				printf("Frame index= %d\n", FrameIndex);
+				printf("termina anim\n");
+				playIndex = 0;
+				play = false;
+			}
+			else //Next frame interpolations
+			{
+				//printf("entro aquí\n");
+				i_curr_steps = 0; //Reset counter
+				//Interpolation
+				interpolation();
+			}
+		}
+		else
+		{
+			//printf("se quedó aqui\n");
+			//printf("max steps: %f", i_max_steps);
+			//Draw animation
+			movAvion_x += KeyFrame[playIndex].movAvion_xInc;
+			movAvion_y += KeyFrame[playIndex].movAvion_yInc;
+			giroAvion += KeyFrame[playIndex].giroAvionInc;
+			i_curr_steps++;
+		}
+
+	}
+}
+
+///////////////* FIN KEYFRAMES*////////////////////////////
+
+void inputKeyframes(bool* keys)
+{
+	if (keys[GLFW_KEY_SPACE])
+	{
+		if (reproduciranimacion < 1)
+		{
+			if (play == false && (FrameIndex > 1))
+			{
+				resetElements();
+				//First Interpolation				
+				interpolation();
+				play = true;
+				playIndex = 0;
+				i_curr_steps = 0;
+				reproduciranimacion++;
+				printf("presiona 0 para habilitar reproducir de nuevo la animación'\n");
+				habilitaranimacion = 0;
+
+			}
+			else
+			{
+				play = false;
+
+			}
+		}
+	}
+	if (keys[GLFW_KEY_0])
+	{
+		if (habilitaranimacion < 1)
+		{
+			reproduciranimacion = 0;
+			printf("Ya puedes reproducir de nuevo la animación con la tecla de barra espaciadora'\n");
+		}
+	}
+
+	if (keys[GLFW_KEY_G])
+	{
+		if (guardoFrame < 1)
+		{
+			saveFrame();
+			//printf("movAvion_x es: %f\n", movAvion_x);
+			//printf("movAvion_y es: %f\n", movAvion_y);
+			printf("presiona H para habilitar guardar otro frame'\n");
+			guardoFrame++;
+			reinicioFrame = 0;
+		}
+	}
+	if (keys[GLFW_KEY_H])
+	{
+		if (reinicioFrame < 1)
+		{
+			guardoFrame = 0;
+			printf("Ya puedes guardar otro frame presionando la tecla G'\n");
+		}
+	}
+
+
+	if (keys[GLFW_KEY_1])
+	{
+		if (ciclo < 1)
+		{
+			//printf("movAvion_x es: %f\n", movAvion_x);
+			movAvion_x += 1.0f;
+			printf("movAvion_x es: %f\n", movAvion_x);
+			ciclo++;
+			ciclo2 = 0;
+			printf("Presiona la tecla 2 para poder habilitar la variable\n");
+		}
+
+	}
+	if (keys[GLFW_KEY_2])
+	{
+		if (ciclo2 < 1)
+		{
+			ciclo = 0;
+			printf("Ya puedes modificar tu variable presionando la tecla 1\n");
+		}
+	}
+
+}
 
 int main()
 {
@@ -418,6 +599,9 @@ int main()
 
 	Persona_M = Model();
 	Persona_M.LoadModel("Models/Persona.obj");
+	
+	Blackhawk_M = Model();
+	Blackhawk_M.LoadModel("Models/Black Hawk uh-60.3ds");
 	
 	/*FI_M = Model();
 	FI_M.LoadModel("Models/Fi_V7Proto.obj");*/
@@ -589,6 +773,41 @@ int main()
 	spotLights[6].SetFlash(ShowLF3, glm::vec3(0.0f, 1.0, 0.0f));
 	spotLights[7].SetFlash(ShowLF3, glm::vec3(0.0f, 1.0, 0.0f));
 	
+	//KEYFRAMES DECLARADOS INICIALES
+
+	KeyFrame[0].movAvion_x = 0.0f;
+	KeyFrame[0].movAvion_y = 0.0f;
+	KeyFrame[0].giroAvion = 0;
+
+
+	KeyFrame[1].movAvion_x = 10.0f;
+	KeyFrame[1].movAvion_y = 20.0f;
+	KeyFrame[1].giroAvion = 0;
+
+
+	KeyFrame[2].movAvion_x = 20.0f;
+	KeyFrame[2].movAvion_y = 0.0f;
+	KeyFrame[2].giroAvion = 0;
+
+
+	KeyFrame[3].movAvion_x = 30.0f;
+	KeyFrame[3].movAvion_y = -20.0f;
+	KeyFrame[3].giroAvion = 0;
+
+	/*	KeyFrame[4].movAvion_x = 3.0f;
+		KeyFrame[4].movAvion_y = -2.0f;
+		KeyFrame[4].giroAvion = 45.0f*/;
+
+	KeyFrame[4].movAvion_x = 30.0f;
+	KeyFrame[4].movAvion_y = -20.0f;
+	KeyFrame[4].giroAvion = 180.0f;
+
+	KeyFrame[5].movAvion_x = 0.0f;
+	KeyFrame[5].movAvion_y = 0.0f;
+	KeyFrame[5].giroAvion = 0;
+	
+	printf("\nTeclas para uso de Keyframes:\n1.-Presionar barra espaciadora para reproducir animacion.\n2.-Presionar 0 para volver a habilitar reproduccion de la animacion\n");
+	printf("3.-Presiona L para guardar frame\n4.-Presiona P para habilitar guardar nuevo frame\n5.-Presiona 1 para mover en X\n6.-Presiona 2 para habilitar mover en X");
 	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -613,6 +832,10 @@ int main()
 			tiempo = 0.0;
 		}
 		//Tiempo(mainWindow.getactivateTime(), skyboxFaces, skyboxFaces2);
+		
+		//para keyframes
+		inputKeyframes(mainWindow.getsKeys());
+		animate();
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1807,14 +2030,26 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Otros_M.RenderModel();
 
+		//Helicoptero
+		glm::vec3 posblackhawk;
+		model = glm::mat4(1.0);
+		posblackhawk = glm::vec3(posXavion + movAvion_x, posYavion + movAvion_y, posZavion);
+		model = glm::translate(model, posblackhawk);
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, (-90 + giroAvion) * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Blackhawk_M.RenderModel();
 		
-		
-		glEnable(GL_BLEND);
+		/*glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Tagave.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
-		glDisable(GL_BLEND);
+		glDisable(GL_BLEND);*/
 
 
 		glUseProgram(0);
