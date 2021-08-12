@@ -601,7 +601,7 @@ int main()
 	Persona_M.LoadModel("Models/Persona.obj");
 	
 	Blackhawk_M = Model();
-	Blackhawk_M.LoadModel("Models/Black Hawk uh-60.3ds");
+	Blackhawk_M.LoadModel("Models/Helicoptero.obj");
 	
 	/*FI_M = Model();
 	FI_M.LoadModel("Models/Fi_V7Proto.obj");*/
@@ -807,7 +807,7 @@ int main()
 	KeyFrame[5].giroAvion = 0;
 	
 	printf("\nTeclas para uso de Keyframes:\n1.-Presionar barra espaciadora para reproducir animacion.\n2.-Presionar 0 para volver a habilitar reproduccion de la animacion\n");
-	printf("3.-Presiona L para guardar frame\n4.-Presiona P para habilitar guardar nuevo frame\n5.-Presiona 1 para mover en X\n6.-Presiona 2 para habilitar mover en X");
+	printf("3.-Presiona G para guardar frame\n4.-Presiona H para habilitar guardar nuevo frame\n5.-Presiona 1 para mover en X\n6.-Presiona 2 para habilitar mover en X");
 	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
