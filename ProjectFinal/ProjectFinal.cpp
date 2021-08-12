@@ -320,7 +320,7 @@ bool animacion = false;
 
 
 //NEW// Keyframes
-float posXavion = 2.0, posYavion = 25*10.0, posZavion = 0;
+float posXavion = 2.0, posYavion = 30*10.0, posZavion = 0;
 float	movAvion_x = 0.0f, movAvion_y = 0.0f;
 float giroAvion = 0;
 
