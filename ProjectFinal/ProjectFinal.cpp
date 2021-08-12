@@ -2036,7 +2036,7 @@ int main()
 		posblackhawk = glm::vec3(posXavion + movAvion_x, posYavion + movAvion_y, posZavion);
 		model = glm::translate(model, posblackhawk);
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		//model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		//model = glm::rotate(model, (-90 + giroAvion) * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
