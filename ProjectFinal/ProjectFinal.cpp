@@ -343,6 +343,23 @@ int main()
 	float giroBrazos = 0.0f;
 	float giroPiernas = 0.0f;
 	float tiempo = 0.0f;
+	
+	float posZRode= 0.0f;
+	float posXRode= 0.0f;
+	float posYRode = 0.0f;
+	float giroRode = 0.0f;
+
+	float posZRode2 = 0.0f;
+	float posXRode2 = 0.0f;
+	float giroRode2 = 0.0f;
+
+	float posZRode3 = 0.0f;
+	float posXRode3 = 0.0f;
+	float giroRode3 = 0.0f;
+
+	float posZRode4 = 0.0f;
+	float posXRode4 = 0.0f;
+	float giroRode4 = 0.0f;
 
 	float posZBrazo = 0.0f;
 	float posXBrazo = 0.0f;
